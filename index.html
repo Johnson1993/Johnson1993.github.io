@@ -1,0 +1,96 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+<meta name="session" content="G4QCAA94EJ4IK238M221VQ5PVJMITDD0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="http://s2.qhres.com/static/bb78589ff9a4d797.js"></script>
+<script type="text/javascript" src="http://s3.qhres.com/static/57478403ba98778d.js"></script>
+<style type="text/css">
+    .login{
+        width: 800px;
+        margin: 200px auto;
+    }
+    input{
+        display: block;
+        width: 250px;
+        height:40px;
+        border: 1px solid #ccc;
+        margin: 10px auto;
+        text-indent: 20px;
+    }
+    .button{
+        text-align: center;
+    }
+    .button a{
+        display: inline-block;
+        margin: 20px auto;
+        text-decoration: none;
+        color: #fff;
+        padding: 10px 56px;
+        background-color: #4179db;
+        border-radius: 20px;
+    }
+</style>
+</head>      
+     <form class="login" id="loginForm" method="post">
+            <input class="text01 icon icon02 top" id="userName" name="userName" type="text" placeholder="帐号">
+            <input class="text01 icon icon03" value="" id="password" name="password" type="password" placeholder="密码">
+            <input class="text02" name="checkCode" id="checkCode" type="text" type="password" placeholder="验证码"><!-- <p>验证码</p><Br> -->
+            <div class="button">
+                <a href="#" onclick="login();" id="loginBtn">登录</a>
+
+            </div>
+            </dt>
+        </dl>
+    </form>
+    <script language="javascript">
+
+    var parameters={};
+
+    function login() {
+        $.ajax({
+            loading:false,
+            type : "post",
+            url : '/cpleasehy/base/loginCheck',
+            data : common.form2Json('loginForm'),
+            safe: true,
+            success : function(data) {
+                if (!data.loginSuccess) {
+                    newCode();
+                    $('.infoIco').html(data.message);
+                    $('.info').fadeIn("slow", function() {
+                        setTimeout('hideError()', 5000)
+                    });
+                } else {
+                    location.href = '/cpleasehy' + data.url;
+                }
+            },
+            error : function (data) {
+                $('.infoIco').html(data.responseText);
+                $('.info').fadeIn("slow", function() {
+                    setTimeout('hideError()', 5000)
+                });
+            }
+        });
+
+        var data = common.form2Json('loginForm');
+        
+        window.top.requestInfo = {
+            session: CryptoJS.enc.Utf8.parse("0123456789ABCDEF"),
+            path: "https://60.247.108.137/cpleasehy",
+            time: new Date().getTime()
+        };
+        console.log(window.top.requestInfo)
+        var g = CryptoJS.AES.encrypt(data.toString(), requestInfo.session, {
+            mode: CryptoJS.mode.ECB,
+            padding: CryptoJS.pad.Pkcs7
+        }); 
+        g.toString()
+        console.log(g.toString())
+    }  
+
+</script>
+</body>
+</html>
